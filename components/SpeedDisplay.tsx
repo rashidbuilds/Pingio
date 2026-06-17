@@ -106,7 +106,7 @@ export function SpeedDisplay() {
               label="Ping"
               value={currentPing > 0 ? `${currentPing.toFixed(1)}` : "—"}
               unit="ms"
-              active={phase === "ping"}
+              active={isPing}
               color="#a78bfa"
             />
             <div className="w-px h-6 bg-border/60" />

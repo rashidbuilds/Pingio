@@ -166,7 +166,7 @@ export class SpeedTestEngine {
     // Pre-generate upload blob ONCE — avoid crypto limit error
     const CHUNK = 2 * 1024 * 1024; // 2 MB
     const testData = generateTestData(CHUNK);
-    const blob = new Blob([testData]);
+    const blob = new Blob([testData as any]);
 
     while (performance.now() - startTime < TEST_DURATION && !this.aborted) {
       try {
