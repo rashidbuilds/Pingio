@@ -19,7 +19,7 @@ export function ResultCard() {
   const pingRating = getLatencyRating(lastResult.ping);
 
   const copyResults = async () => {
-    const text = `PulseTest Results
+    const text = `Pingio Results
 Download: ${formatSpeed(lastResult.download)}
 Upload: ${formatSpeed(lastResult.upload)}
 Ping: ${formatLatency(lastResult.ping)}
@@ -48,7 +48,7 @@ Tested: ${new Date(lastResult.timestamp).toLocaleString()}`;
         logging: false,
       });
       const link = document.createElement("a");
-      link.download = `pulsetest-${Date.now()}.png`;
+      link.download = `pingio-${Date.now()}.png`;
       link.href = canvas.toDataURL("image/png");
       link.click();
     } catch (e) {
@@ -61,14 +61,14 @@ Tested: ${new Date(lastResult.timestamp).toLocaleString()}`;
     const blob = new Blob([data], { type: "application/json" });
     const url = URL.createObjectURL(blob);
     const link = document.createElement("a");
-    link.download = `pulsetest-${Date.now()}.json`;
+    link.download = `pingio-${Date.now()}.json`;
     link.href = url;
     link.click();
     URL.revokeObjectURL(url);
   };
 
   const shareResults = async () => {
-    const text = `My network speed: ↓ ${formatSpeed(lastResult.download)} / ↑ ${formatSpeed(lastResult.upload)} | Ping: ${formatLatency(lastResult.ping)} — tested with PulseTest`;
+    const text = `My network speed: ↓ ${formatSpeed(lastResult.download)} / ↑ ${formatSpeed(lastResult.upload)} | Ping: ${formatLatency(lastResult.ping)} — tested with Pingio`;
     if (navigator.share) {
       await navigator.share({ text });
     } else {

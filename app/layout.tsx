@@ -3,12 +3,12 @@ import "./globals.css";
 import { ThemeProvider } from "@/components/ThemeProvider";
 
 export const metadata: Metadata = {
-  title: "PulseTest — Network Speed Test",
+  title: "Pingio — Network Speed Test",
   description:
     "Measure your network performance instantly. Real-time download, upload, ping, and jitter testing.",
   keywords: ["speed test", "internet speed", "network test", "bandwidth", "ping", "latency"],
   openGraph: {
-    title: "PulseTest — Network Speed Test",
+    title: "Pingio — Network Speed Test",
     description: "Measure your network performance instantly.",
     type: "website",
   },

@@ -1,7 +1,7 @@
 import { openDB, DBSchema, IDBPDatabase } from "idb";
 import { TestResult } from "@/types";
 
-interface PulseTestDB extends DBSchema {
+interface PingioDB extends DBSchema {
   results: {
     key: string;
     value: TestResult;
@@ -9,11 +9,11 @@ interface PulseTestDB extends DBSchema {
   };
 }
 
-let db: IDBPDatabase<PulseTestDB> | null = null;
+let db: IDBPDatabase<PingioDB> | null = null;
 
-async function getDB(): Promise<IDBPDatabase<PulseTestDB>> {
+async function getDB(): Promise<IDBPDatabase<PingioDB>> {
   if (db) return db;
-  db = await openDB<PulseTestDB>("pulsetest-db", 1, {
+  db = await openDB<PingioDB>("pingio-db", 1, {
     upgrade(database) {
       const store = database.createObjectStore("results", { keyPath: "id" });
       store.createIndex("by-timestamp", "timestamp");

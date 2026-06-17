@@ -15,6 +15,6 @@ export const useThemeStore = create<ThemeState>()(
         set((state) => ({ theme: state.theme === "dark" ? "light" : "dark" })),
       setTheme: (theme) => set({ theme }),
     }),
-    { name: "pulsetest-theme" }
+    { name: "pingio-theme" }
   )
 );

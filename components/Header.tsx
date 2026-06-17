@@ -31,7 +31,7 @@ export function Header() {
             </svg>
           </div>
           <span className="font-semibold text-[14px] tracking-[-0.01em] text-foreground">
-            PulseTest
+            Pingio
           </span>
         </div>
 
