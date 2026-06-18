@@ -166,7 +166,7 @@ export class SpeedTestEngine {
     // Pre-generate upload blob ONCE — avoid crypto limit error
     const CHUNK = 2 * 1024 * 1024; // 2 MB
     const testData = generateTestData(CHUNK);
-    const blob = new Blob([testData as any]);
+    const blob = new Blob([testData as any], { type: "text/plain" });
 
     while (performance.now() - startTime < TEST_DURATION && !this.aborted) {
       try {
@@ -174,8 +174,8 @@ export class SpeedTestEngine {
 
         await new Promise<void>((resolve, reject) => {
           const xhr = new XMLHttpRequest();
-          xhr.open("POST", "https://speed.cloudflare.com/__up", true);
-          xhr.setRequestHeader("Content-Type", "application/octet-stream");
+          xhr.open("POST", "/api/upload", true);
+          xhr.setRequestHeader("Content-Type", "text/plain");
 
           xhr.upload.addEventListener("progress", (e) => {
             if (e.loaded > 1024) {

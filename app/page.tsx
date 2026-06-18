@@ -91,7 +91,7 @@ export default function Home() {
             initial={{ opacity: 0, y: 8 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.1 }}
-            className="text-3xl font-semibold text-muted-foreground"
+            className="text-3xl text-center font-semibold text-muted-foreground"
           >
             Measure your network performance instantly
           </motion.h1>
