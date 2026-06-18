@@ -33,7 +33,7 @@ Unlike traditional speed testing tools that are cluttered with heavy display adv
 * **Live Interactive Charts:** Renders dynamic real-time SVG charts of network activity using Recharts and Framer Motion.
 * **Network & Routing Metadata:** Auto-detects user browser environment, operating system, and connection configuration details via native Web APIs.
 * **IndexedDB Local History:** Persistently archives all completed tests locally. Users can browse, filter, or purge past runs.
-* **Sleek Sharing Cards:** Converts test results into a polished, high-resolution PNG image (via html2canvas) or a raw JSON schema.
+* **Sleek Sharing Cards:** Converts test results into a polished, high-resolution PNG image (via html2canvas-pro) or a raw JSON schema.
 * **Fully Responsive UI:** Adapts seamlessly across mobile, tablet, and desktop viewports.
 * **Adaptive Dark Mode:** Integrated dark/light theme selector with smooth CSS transition timings.
 * **Zero Tracker Scripts:** 100% ad-free, cookie-free, and privacy-respecting codebase.
@@ -70,11 +70,12 @@ Pingio uses the modern HTTP streams API to download progressive payload chunks r
 * Throughput samples are taken at 50ms intervals during a 12-second test window using:
   $$\text{Speed (Mbps)} = \frac{\text{Bytes Received} \times 8}{\text{Elapsed Time (seconds)} \times 1,000,000}$$
 
-### 3. Upload Stream
-To perform upload tests safely without crashing browser memory, Pingio:
-* Pre-generates a single **2 MB** binary blob using a fast, seed-based Linear Congruential Generator (LCG).
-* Uploads the blob repeatedly via `XMLHttpRequest` to Cloudflare's upload receiver endpoint (`https://speed.cloudflare.com/__up`) over a 12-second window.
-* Captures upload progress events using native XHR upload listeners.
+### 3. Upload Stream (Self-Hosted Telemetry)
+To measure upload speed reliably across all web environments without CORS or SSL errors:
+* Pingio uses a custom Next.js Route Handler (`/api/upload`) as a secure local/production upload target.
+* Pre-generates a single **15 MB** binary blob using a fast, seed-based Linear Congruential Generator (LCG) to minimize connection and serialization overhead.
+* Uploads the blob using an **Adaptive Multi-Request Loop** with TCP Keep-Alive connection reuse over a 12-second window.
+* Accumulates bytes uploaded progressively across requests to calculate a smooth, accurate, real-time speed.
 
 ### 4. Storage & UI State
 * **State Management:** All stages of the test are coordinated via a global Zustand store (`store/testStore.ts`), which binds directly to the charting components and speedometer animation handlers.
@@ -87,6 +88,9 @@ To perform upload tests safely without crashing browser memory, Pingio:
 ```
 pingio/
 ├── app/
+│   ├── api/
+│   │   └── upload/
+│   │       └── route.ts    # Next.js Route Handler for upload testing
 │   ├── layout.tsx          # Root layout & page metadata
 │   ├── globals.css         # Tailwind directives, font config & CSS variables
 │   └── page.tsx            # Main page orchestrating speed test states
@@ -158,7 +162,7 @@ pingio/
 Pingio is engineered to maximize performance metrics and Core Web Vitals:
 
 * **Lighthouse Optimization:** Scored 100/100 across Performance, Accessibility, Best Practices, and SEO.
-* **Lazy Loading:** Dynamically imports heavy charting libraries (`recharts`) and canvas conversion tools (`html2canvas`) only when needed, reducing the initial JavaScript bundle size.
+* **Lazy Loading:** Dynamically imports heavy charting libraries (`recharts`) and canvas conversion tools (`html2canvas-pro`) only when needed, reducing the initial JavaScript bundle size.
 * **Render Throttle:** Zustand selectors isolate state updates so that updating speedometer text values does not trigger costly layout repaints or chart re-renders.
 * **Zero Image Assets:** Layout elements, icons, and themes are rendered entirely with Tailwind CSS variables and optimized inline SVGs to avoid layout shifts (CLS) and extra network requests.
 

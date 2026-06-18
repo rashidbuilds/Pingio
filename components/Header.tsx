@@ -38,7 +38,7 @@ export function Header() {
         <div className="flex items-center gap-1.5">
           {/* GitHub repo link */}
           <a
-            href="https://github.com/rashidbuilds/pulsetest"
+            href="https://github.com/rashidbuilds/Pingio"
             target="_blank"
             rel="noopener noreferrer"
             aria-label="View on GitHub"

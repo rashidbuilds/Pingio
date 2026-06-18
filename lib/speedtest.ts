@@ -159,35 +159,56 @@ export class SpeedTestEngine {
   ): Promise<{ avgSpeed: number; peakSpeed: number; samples: SpeedDataPoint[] }> {
     const samples: SpeedDataPoint[] = [];
     const readings: number[] = [];
-    const TEST_DURATION = 12000;
+    const TEST_DURATION = 12000; // 12 seconds
     const startTime = performance.now();
     let peakSpeed = 0;
 
-    // Pre-generate upload blob ONCE — avoid crypto limit error
-    const CHUNK = 2 * 1024 * 1024; // 2 MB
-    const testData = generateTestData(CHUNK);
+    // Use a larger 15MB chunk size to minimize request count and connection overhead
+    const CHUNK_SIZE = 15 * 1024 * 1024;
+    const testData = generateTestData(CHUNK_SIZE);
     const blob = new Blob([testData as any], { type: "text/plain" });
 
-    while (performance.now() - startTime < TEST_DURATION && !this.aborted) {
-      try {
-        const uploadStart = performance.now();
+    let totalBytesUploadedBeforeCurrent = 0;
+    const activeXhrRef: { current: XMLHttpRequest | null } = { current: null };
 
-        await new Promise<void>((resolve, reject) => {
+    // Global timer to guarantee the upload test stops precisely at 12 seconds
+    const timeoutId = setTimeout(() => {
+      if (activeXhrRef.current) {
+        activeXhrRef.current.abort();
+      }
+    }, TEST_DURATION);
+
+    try {
+      while (performance.now() - startTime < TEST_DURATION && !this.aborted) {
+        await new Promise<void>((resolve) => {
           const xhr = new XMLHttpRequest();
+          activeXhrRef.current = xhr;
+
           xhr.open("POST", "/api/upload", true);
           xhr.setRequestHeader("Content-Type", "text/plain");
 
           xhr.upload.addEventListener("progress", (e) => {
+            const now = performance.now();
+            const elapsedSinceStart = (now - startTime) / 1000;
+
+            // Stop immediately if the duration is exceeded
+            if (elapsedSinceStart >= TEST_DURATION / 1000) {
+              xhr.abort();
+              resolve();
+              return;
+            }
+
             if (e.loaded > 1024) {
-              const elapsed = (performance.now() - uploadStart) / 1000;
-              if (elapsed > 0.05) {
-                const speed = (e.loaded * 8) / elapsed / 1e6;
+              // Calculate cumulative bytes uploaded across all requests for smoothness
+              const cumulativeBytes = totalBytesUploadedBeforeCurrent + e.loaded;
+              if (elapsedSinceStart > 0.05) {
+                const speed = (cumulativeBytes * 8) / elapsedSinceStart / 1e6;
                 if (speed > 0.01 && speed < 50_000) {
                   samples.push({ time: Date.now(), speed });
                   readings.push(speed);
                   peakSpeed = Math.max(peakSpeed, speed);
                   const progress = Math.min(
-                    ((performance.now() - startTime) / TEST_DURATION) * 100,
+                    (elapsedSinceStart / (TEST_DURATION / 1000)) * 100,
                     99
                   );
                   onProgress(speed, samples, progress);
@@ -196,19 +217,33 @@ export class SpeedTestEngine {
             }
           });
 
-          xhr.addEventListener("load", () => resolve());
-          xhr.addEventListener("error", () => reject(new Error("Upload failed")));
-          xhr.addEventListener("abort", () => resolve()); // Treat abort as done
+          xhr.addEventListener("load", () => {
+            totalBytesUploadedBeforeCurrent += CHUNK_SIZE;
+            resolve();
+          });
+          xhr.addEventListener("error", () => {
+            // Resolve instead of reject so the loop can retry or exit gracefully
+            resolve();
+          });
+          xhr.addEventListener("abort", () => {
+            resolve();
+          });
 
           if (this.aborted) {
             xhr.abort();
             resolve();
             return;
           }
+
           xhr.send(blob);
         });
-      } catch {
-        await new Promise((r) => setTimeout(r, 300));
+      }
+    } catch (err) {
+      // Catch unexpected errors
+    } finally {
+      clearTimeout(timeoutId);
+      if (activeXhrRef.current) {
+        activeXhrRef.current.abort();
       }
     }
 
