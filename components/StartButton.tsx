@@ -22,7 +22,7 @@ export function StartButton({ onStart, onStop }: StartButtonProps) {
         onClick={isRunning ? onStop : isComplete ? onStart : onStart}
         whileHover={{ scale: 1.03 }}
         whileTap={{ scale: 0.97 }}
-        className={`relative w-20 h-20 sm:w-24 sm:h-24 rounded-full flex items-center justify-center transition-all duration-300 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background ${isRunning
+        className={`relative cursor-pointer w-20 h-20 sm:w-24 sm:h-24 rounded-full flex items-center justify-center transition-all duration-300 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background ${isRunning
           ? "bg-red-500/10 border-2 border-red-500/40 hover:border-red-500/70 hover:bg-red-500/15"
           : "bg-primary/10 border-2 border-primary/30 hover:border-primary/60 hover:bg-primary/15"
           }`}

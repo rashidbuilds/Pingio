@@ -14,7 +14,7 @@ export function Header() {
       transition={{ duration: 0.4, ease: [0.25, 0.1, 0.25, 1] }}
       className="sticky top-0 z-50 w-full bg-transparent"
     >
-      <div className="max-w-5xl mx-auto px-5 sm:px-8 h-[64px] flex items-center justify-between">
+      <div className="max-w-7xl mx-auto px-5 sm:px-8 h-[80px] flex items-center justify-between">
         {/* Left — Logo + Name */}
         <div className="flex items-center gap-2.5">
           <div className="w-10 h-10 flex items-center justify-center">

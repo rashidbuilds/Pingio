@@ -23,46 +23,49 @@ function HistoryRow({
       animate={{ opacity: 1, x: 0 }}
       exit={{ opacity: 0, x: 10, height: 0 }}
       transition={{ delay: index * 0.05 }}
-      className="group flex items-center gap-4 py-3 px-4 rounded-lg hover:bg-muted/30 transition-colors duration-150"
+      className="group flex flex-col gap-3.5 p-4 rounded-xl border border-border/30 bg-card/10 relative sm:flex-row sm:items-center sm:gap-4 sm:py-3 sm:px-4 sm:rounded-lg sm:border-0 sm:bg-transparent hover:bg-muted/30 transition-all duration-150"
     >
-      <div className="flex items-center gap-1.5 text-muted-foreground/60 min-w-[90px]">
-        <Clock className="w-3 h-3 flex-shrink-0" />
-        <span className="text-xs">{formatDate(result.timestamp)}</span>
+      {/* Time and Clock */}
+      <div className="flex items-center gap-1.5 text-muted-foreground/60 sm:min-w-[90px]">
+        <Clock className="w-3.5 h-3.5 sm:w-3 sm:h-3 flex-shrink-0" />
+        <span className="text-xs font-medium sm:font-normal">{formatDate(result.timestamp)}</span>
       </div>
 
-      <div className="flex-1 grid grid-cols-4 gap-2 text-sm">
-        <div className="flex flex-col">
-          <span className="text-xs text-muted-foreground/50 mb-0.5">↓ Down</span>
-          <span className="font-medium tabular-nums text-emerald-500">
+      {/* Metrics Grid */}
+      <div className="grid grid-cols-2 gap-3 sm:grid-cols-4 sm:gap-2 sm:flex-1 text-sm">
+        <div className="flex flex-col bg-muted/10 sm:bg-transparent p-2.5 sm:p-0 rounded-lg">
+          <span className="text-[10px] sm:text-xs text-muted-foreground/50 mb-0.5 uppercase sm:normal-case tracking-wider sm:tracking-normal font-semibold sm:font-normal">↓ Download</span>
+          <span className="text-base sm:text-sm font-semibold sm:font-medium tabular-nums text-emerald-500">
             {formatSpeed(result.download)}
           </span>
         </div>
-        <div className="flex flex-col">
-          <span className="text-xs text-muted-foreground/50 mb-0.5">↑ Up</span>
-          <span className="font-medium tabular-nums text-blue-500">
+        <div className="flex flex-col bg-muted/10 sm:bg-transparent p-2.5 sm:p-0 rounded-lg">
+          <span className="text-[10px] sm:text-xs text-muted-foreground/50 mb-0.5 uppercase sm:normal-case tracking-wider sm:tracking-normal font-semibold sm:font-normal">↑ Upload</span>
+          <span className="text-base sm:text-sm font-semibold sm:font-medium tabular-nums text-blue-500">
             {formatSpeed(result.upload)}
           </span>
         </div>
-        <div className="flex flex-col">
-          <span className="text-xs text-muted-foreground/50 mb-0.5">Ping</span>
-          <span className="font-medium tabular-nums text-foreground/80">
+        <div className="flex flex-col bg-muted/10 sm:bg-transparent p-2.5 sm:p-0 rounded-lg">
+          <span className="text-[10px] sm:text-xs text-muted-foreground/50 mb-0.5 uppercase sm:normal-case tracking-wider sm:tracking-normal font-semibold sm:font-normal">Ping</span>
+          <span className="text-base sm:text-sm font-semibold sm:font-medium tabular-nums text-foreground/80">
             {formatLatency(result.ping)}
           </span>
         </div>
-        <div className="flex flex-col">
-          <span className="text-xs text-muted-foreground/50 mb-0.5">Jitter</span>
-          <span className="font-medium tabular-nums text-foreground/80">
+        <div className="flex flex-col bg-muted/10 sm:bg-transparent p-2.5 sm:p-0 rounded-lg">
+          <span className="text-[10px] sm:text-xs text-muted-foreground/50 mb-0.5 uppercase sm:normal-case tracking-wider sm:tracking-normal font-semibold sm:font-normal">Jitter</span>
+          <span className="text-base sm:text-sm font-semibold sm:font-medium tabular-nums text-foreground/80">
             {formatLatency(result.jitter)}
           </span>
         </div>
       </div>
 
+      {/* Delete button */}
       <button
         onClick={() => onDelete(result.id)}
-        className="opacity-0 group-hover:opacity-100 transition-opacity p-1.5 rounded-md hover:bg-destructive/10 hover:text-destructive text-muted-foreground/40"
+        className="cursor-pointer p-1.5 rounded-md hover:bg-red-500/10 text-red-500/70 hover:text-red-500 transition-all duration-150 absolute top-3.5 right-3.5 sm:relative sm:top-auto sm:right-auto"
         aria-label="Delete result"
       >
-        <X className="w-3.5 h-3.5" />
+        <Trash2 className="w-4 h-4 sm:w-3.5 sm:h-3.5" />
       </button>
     </motion.div>
   );
@@ -98,7 +101,7 @@ export function TestHistory() {
   }
 
   return (
-    <div className="w-full max-w-3xl mx-auto">
+    <div className="w-full max-w-5xl mx-auto">
       <div className="rounded-xl border border-border/40 bg-card/20 overflow-hidden">
         {/* Header */}
         <div className="flex items-center justify-between px-4 py-3 border-b border-border/40">
@@ -115,7 +118,7 @@ export function TestHistory() {
               variant="ghost"
               size="sm"
               onClick={handleClearAll}
-              className="h-7 text-xs text-muted-foreground/60 hover:text-destructive gap-1.5"
+              className="h-7 cursor-pointer text-xs text-muted-foreground/60 hover:text-destructive gap-1.5"
             >
               <Trash2 className="w-3 h-3" />
               Clear all
@@ -124,7 +127,7 @@ export function TestHistory() {
         </div>
 
         {/* Rows */}
-        <div className="divide-y divide-border/30">
+        <div className="flex flex-col gap-3 p-3 sm:p-0 sm:divide-y sm:divide-border/30 sm:gap-0">
           <AnimatePresence mode="popLayout">
             {history.map((result, i) => (
               <HistoryRow

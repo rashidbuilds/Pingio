@@ -8,7 +8,6 @@ import { saveResult, getAllResults } from "@/lib/db";
 import { TestResult } from "@/types";
 import { Header } from "@/components/Header";
 import { SpeedDisplay } from "@/components/SpeedDisplay";
-import { StartButton } from "@/components/StartButton";
 import { TestProgress } from "@/components/TestProgress";
 import { LiveCharts } from "@/components/LiveCharts";
 import { ResultCard } from "@/components/ResultCard";
@@ -86,7 +85,7 @@ export default function Home() {
       <Header />
 
       <main className="flex-1 flex flex-col">
-        <section className="flex flex-col items-center px-4 sm:px-6 pt-14 pb-10 gap-8 max-w-5xl mx-auto w-full">
+        <section className="flex flex-col items-center pt-14 pb-10 gap-8 max-w-5xl mx-auto w-full">
           <motion.h1
             initial={{ opacity: 0, y: 8 }}
             animate={{ opacity: 1, y: 0 }}
@@ -101,18 +100,10 @@ export default function Home() {
             animate={{ opacity: 1, scale: 1 }}
             transition={{ delay: 0.15, duration: 0.4 }}
           >
-            <SpeedDisplay />
+            <SpeedDisplay onStart={runTest} onStop={stopTest} />
           </motion.div>
 
           <TestProgress />
-
-          <motion.div
-            initial={{ opacity: 0, y: 8 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.2 }}
-          >
-            <StartButton onStart={runTest} onStop={stopTest} />
-          </motion.div>
 
           <div className="w-full">
             <LiveCharts />

@@ -31,8 +31,8 @@ export function NetworkInsights() {
       value: networkInfo.effectiveType
         ? networkInfo.effectiveType.toUpperCase()
         : deviceInfo.connectionType !== "Unknown"
-        ? deviceInfo.connectionType
-        : "—",
+          ? deviceInfo.connectionType
+          : "—",
     },
   ];
 
@@ -57,7 +57,7 @@ export function NetworkInsights() {
       initial={{ opacity: 0, y: 12 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: 0.2 }}
-      className="w-full max-w-3xl mx-auto"
+      className="w-full max-w-5xl mx-auto"
     >
       <div className="rounded-xl border border-border/40 bg-card/20 overflow-hidden">
         <div className="px-4 py-3 border-b border-border/40">

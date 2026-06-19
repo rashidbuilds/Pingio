@@ -9,7 +9,7 @@ export function Footer() {
           href="https://www.rashidbuilds.com"
           target="_blank"
           rel="noopener noreferrer"
-          className="text-muted-foreground/60 hover:text-foreground transition-colors duration-150 underline-offset-2 hover:underline"
+          className="text-blue-600 hover:text-foreground transition-colors duration-150 underline-offset-2 hover:underline"
         >
           Rashid Ali
         </a>
