@@ -137,11 +137,11 @@ export default function Home() {
 
           <TestProgress />
 
-          <div className="w-full">
+          <div className="w-full px-4 md:px-0">
             <LiveCharts />
           </div>
 
-          <div className="w-full">
+          <div className="w-full px-4 md:px-0">
             <ResultCard />
           </div>
         </section>

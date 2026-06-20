@@ -1,8 +1,8 @@
-# ⚡ Pingio
+# ⚡ Pingio — Modern Internet Speed Test & Network Diagnostics Tool
 
-### Measure your internet performance instantly.
+### Measure your internet performance instantly, ad-free, and privately.
 
-A modern, high-performance, and privacy-focused internet speed testing application. Built with **Next.js 16 (App Router)**, **React 19**, and **Tailwind CSS v4**, Pingio delivers accurate network metrics via a sleek, advertisement-free interface inspired by Linear and Vercel.
+A modern, high-performance, and privacy-focused open-source **internet speed testing application**. Built with **Next.js 16 (App Router)**, **React 19**, and **Tailwind CSS v4**, Pingio delivers accurate network metrics via a sleek, advertisement-free interface inspired by Linear and Vercel.
 
 ---
 
@@ -42,11 +42,11 @@ Unlike traditional speed testing tools that are cluttered with heavy display adv
 
 ## 📸 Screenshots
 
-| Speed Test Running | Results Dashboard |
+| ⚡ Speed Test Running | 📊 Results Dashboard |
 | :---: | :---: |
-| ![Pingio Running Dashboard](https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=600&q=80) <br> *Placeholder: Speed Test Dashboard (Running)* | ![Pingio Results Page](https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&w=600&q=80) <br> *Placeholder: Final Speed Results* |
-| **Local Test History** | **Mobile Responsive View** |
-| ![Pingio Test History List](https://images.unsplash.com/photo-1504868584819-f8e8b4b6d7e3?auto=format&fit=crop&w=600&q=80) <br> *Placeholder: IndexedDB History list* | ![Pingio Mobile Viewport](https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?auto=format&fit=crop&w=600&q=80) <br> *Placeholder: Mobile Viewport* |
+| ![Pingio Running Dashboard](public/pingio-speedometer-running.png) <br> *Speed Test in Progress with Real-time Gauges* | ![Pingio Results Page](public/pingio-dashboard.png) <br> *Comprehensive Results Dashboard with Insights* |
+| **📁 Local History & Diagnostics** | **🖼️ Exportable Diagnostic Card** |
+| ![Pingio Test History List](public/pingio-history-modal.png) <br> *IndexedDB Local Test History & Actions* | ![Pingio Diagnostic Card](public/pingio-diagnostic-card.png) <br> *Unified Square Shareable Speed Report* |
 
 ---
 
