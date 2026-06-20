@@ -21,6 +21,11 @@ export interface TestResult {
   uploadPeak: number;
   serverLocation?: string;
   isp?: string;
+  ip?: string;
+  device?: string;
+  browser?: string;
+  os?: string;
+  connection?: string;
 }
 
 export interface LiveTestData {

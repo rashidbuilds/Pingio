@@ -44,7 +44,7 @@ function MiniChart({
             className="w-[6px] h-[6px] rounded-full flex-shrink-0"
             style={{ backgroundColor: color }}
           />
-          <span className="text-[11px] font-semibold uppercase tracking-widest text-muted-foreground">
+          <span className="text-xs font-semibold text-muted-foreground/60 tracking-wide">
             {label}
           </span>
         </div>
@@ -162,15 +162,15 @@ export function LiveCharts() {
         transition={{ duration: 0.35 }}
         className="w-full"
       >
-        <div className="rounded-2xl border border-border/50 bg-card/60 backdrop-blur-sm overflow-hidden">
+        <div className="rounded-2xl border border-border/25 bg-card overflow-hidden">
           {/* Section label */}
           <div className="px-5 pt-4 pb-1">
-            <span className="text-[10px] font-semibold uppercase tracking-widest text-muted-foreground/50">
+            <span className="text-xs font-semibold text-muted-foreground/65 tracking-wide">
               Live Performance
             </span>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-0 divide-y sm:divide-y-0 sm:divide-x divide-border/40 px-2 pb-4 pt-2">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-0 divide-y sm:divide-y-0 sm:divide-x divide-border/20 px-2 pb-4 pt-2">
             <div className="px-3 py-3">
               <MiniChart
                 data={dlData}

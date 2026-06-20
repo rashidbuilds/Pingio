@@ -170,8 +170,9 @@ export function SpeedDisplay({ onStart, onStop }: SpeedDisplayProps) {
             cy="180"
             r="140"
             fill="none"
-            stroke="hsl(var(--border) / 0.15)"
+            stroke={DL_COLOR}
             strokeWidth="5"
+            strokeOpacity="0.12"
             strokeLinecap="round"
             strokeDasharray="703.71 879.64"
             transform="rotate(126, 180, 180)"
@@ -183,8 +184,9 @@ export function SpeedDisplay({ onStart, onStop }: SpeedDisplayProps) {
             cy="180"
             r="120"
             fill="none"
-            stroke="hsl(var(--border) / 0.08)"
+            stroke={UL_COLOR}
             strokeWidth="5"
+            strokeOpacity="0.1"
             strokeLinecap="round"
             strokeDasharray="603.18 753.98"
             transform="rotate(126, 180, 180)"
@@ -230,7 +232,7 @@ export function SpeedDisplay({ onStart, onStop }: SpeedDisplayProps) {
               className="transition-colors duration-300"
               stroke={t.isTickActive 
                 ? (isDl ? DL_COLOR : isUl ? UL_COLOR : DL_COLOR) 
-                : "hsl(var(--border) / 0.25)"
+                : "hsl(var(--foreground) / 0.12)"
               }
               strokeWidth={t.isTickActive ? "2.5" : "1.5"}
             />
@@ -253,7 +255,7 @@ export function SpeedDisplay({ onStart, onStop }: SpeedDisplayProps) {
                 style={{
                   fill: t.isTickActive 
                     ? (isDl ? DL_COLOR : isUl ? UL_COLOR : DL_COLOR)
-                    : "hsl(var(--muted-foreground) / 0.45)",
+                    : "hsl(var(--muted-foreground) / 0.6)",
                 }}
               >
                 {t.text}
@@ -305,7 +307,7 @@ export function SpeedDisplay({ onStart, onStop }: SpeedDisplayProps) {
           ) : isComplete ? (
             // Completed State: Show speeds side-by-side & "Test Again"
             <div className="flex flex-col items-center gap-3 animate-fade-in mt-2">
-              <span className="text-[9px] font-semibold uppercase tracking-[0.2em] text-muted-foreground/50">
+              <span className="text-[10px] font-semibold tracking-wide text-muted-foreground/50">
                 Test Complete
               </span>
               
@@ -315,21 +317,21 @@ export function SpeedDisplay({ onStart, onStop }: SpeedDisplayProps) {
                   <span className="text-[28px] sm:text-[32px] font-light tabular-nums leading-none" style={{ color: DL_COLOR }}>
                     {formattedDl.num}
                   </span>
-                  <span className="text-[9px] text-muted-foreground/40 uppercase tracking-widest mt-1.5 font-semibold">Down</span>
+                  <span className="text-[10px] text-muted-foreground/50 tracking-wide mt-1 font-semibold">Down</span>
                 </div>
 
-                <div className="w-px h-8 bg-border/40" />
+                <div className="w-px h-8 bg-border/25" />
 
                 {/* Upload */}
                 <div className="flex flex-col items-center">
                   <span className="text-[28px] sm:text-[32px] font-light tabular-nums leading-none" style={{ color: UL_COLOR }}>
                     {formattedUl.num}
                   </span>
-                  <span className="text-[9px] text-muted-foreground/40 uppercase tracking-widest mt-1.5 font-semibold">Up</span>
+                  <span className="text-[10px] text-muted-foreground/50 tracking-wide mt-1 font-semibold">Up</span>
                 </div>
               </div>
               
-              <span className="text-[10px] text-muted-foreground/30 font-light uppercase tracking-wider">
+              <span className="text-[10px] text-muted-foreground/40 font-medium tracking-wide">
                 {formattedDl.unit}
               </span>
 
@@ -338,7 +340,7 @@ export function SpeedDisplay({ onStart, onStop }: SpeedDisplayProps) {
                   onClick={onStart}
                   whileHover={{ scale: 1.03 }}
                   whileTap={{ scale: 0.97 }}
-                  className="cursor-pointer px-4 py-1.5 rounded-full border border-primary/20 bg-primary/5 hover:border-primary/60 text-[9px] font-semibold text-primary tracking-wider uppercase mt-2.5"
+                  className="cursor-pointer px-4 py-1.5 rounded-full border border-primary/20 bg-primary/5 hover:border-primary/60 text-[10px] font-semibold text-primary tracking-wide mt-2.5"
                 >
                   Test Again
                 </motion.button>
@@ -347,7 +349,7 @@ export function SpeedDisplay({ onStart, onStop }: SpeedDisplayProps) {
           ) : (
             // Running State: Show Active Metric value + cancel button
             <div className="flex flex-col items-center mt-3">
-              <span className="text-[9px] font-semibold uppercase tracking-[0.2em] mb-1.5" style={{ color: activeColor }}>
+              <span className="text-[10px] font-semibold tracking-wide mb-1.5" style={{ color: activeColor }}>
                 {statusText}
               </span>
               
@@ -356,7 +358,7 @@ export function SpeedDisplay({ onStart, onStop }: SpeedDisplayProps) {
                   <span className="text-4xl sm:text-5xl font-light tabular-nums" style={{ color: PING_COLOR }}>
                     {currentPing > 0 ? currentPing.toFixed(1) : "—"}
                   </span>
-                  <span className="text-[9px] text-purple-400/60 uppercase tracking-wider mt-1.5 font-semibold">ms latency</span>
+                  <span className="text-[10px] text-purple-400/60 tracking-wide mt-1.5 font-semibold">ms latency</span>
                 </div>
               ) : (
                 <div className="flex flex-col items-center">
@@ -378,7 +380,7 @@ export function SpeedDisplay({ onStart, onStop }: SpeedDisplayProps) {
                 <motion.button
                   onClick={onStop}
                   whileHover={{ scale: 1.05 }}
-                  className="cursor-pointer text-[9px] text-red-500/70 hover:text-red-500 font-bold tracking-wider uppercase bg-red-500/10 px-3.5 py-1.5 rounded-full border border-red-500/20 hover:border-red-500/40 mt-5.5"
+                  className="cursor-pointer text-[10px] text-red-500/70 hover:text-red-500 font-bold tracking-wide bg-red-500/10 px-3.5 py-1.5 rounded-full border border-red-500/20 hover:border-red-500/40 mt-5.5"
                 >
                   Cancel
                 </motion.button>

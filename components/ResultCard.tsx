@@ -6,6 +6,7 @@ import { Copy, Download, Share2, Check } from "lucide-react";
 import { useTestStore } from "@/store/testStore";
 import { formatLatency, getSpeedRating, getLatencyRating } from "@/lib/utils";
 import html2canvas from "html2canvas-pro";
+import { SpeedCardView } from "@/components/SpeedCardView";
 
 const DL_COLOR = "#34d399";
 const UL_COLOR = "#60a5fa";
@@ -22,6 +23,8 @@ export function ResultCard() {
   const { phase, lastResult } = useTestStore();
   const cardRef = useRef<HTMLDivElement>(null);
   const [copied, setCopied] = useState(false);
+  const [downloadingPNG, setDownloadingPNG] = useState(false);
+  const [showOffscreen, setShowOffscreen] = useState(false);
 
   if (phase !== "complete" || !lastResult) return null;
 
@@ -53,25 +56,41 @@ export function ResultCard() {
   };
 
   const downloadImage = async () => {
-    if (!cardRef.current) return;
-    try {
-      const canvas = await html2canvas(cardRef.current, {
-        backgroundColor: null,
-        scale: 2,
-        useCORS: true,
-        logging: false,
-      });
-      const link = document.createElement("a");
-      link.download = `pingio-test-${Date.now()}.png`;
-      link.href = canvas.toDataURL("image/png");
-      link.click();
-    } catch (e) {
-      console.error("Export failed:", e);
-    }
+    if (!lastResult) return;
+    setDownloadingPNG(true);
+    setShowOffscreen(true);
+    setTimeout(async () => {
+      const element = document.getElementById("resultcard-offscreen-download");
+      if (element) {
+        try {
+          const canvas = await html2canvas(element, {
+            backgroundColor: "#070a0e",
+            scale: 2,
+            useCORS: true,
+            logging: false,
+            width: 500,
+            height: 500,
+          });
+          const link = document.createElement("a");
+          link.download = `pingio-result-${lastResult.id.slice(0, 8)}.png`;
+          link.href = canvas.toDataURL("image/png");
+          link.click();
+        } catch (e) {
+          console.error("Export failed:", e);
+        }
+      }
+      setShowOffscreen(false);
+      setDownloadingPNG(false);
+    }, 150);
   };
 
   const downloadJSON = () => {
-    const data = JSON.stringify(lastResult, null, 2);
+    if (!lastResult) return;
+    const jsonOutput = {
+      ...lastResult,
+      formattedDate: new Date(lastResult.timestamp).toLocaleString(),
+    };
+    const data = JSON.stringify(jsonOutput, null, 2);
     const blob = new Blob([data], { type: "application/json" });
     const url = URL.createObjectURL(blob);
     const link = document.createElement("a");
@@ -100,15 +119,15 @@ export function ResultCard() {
         {/* Shareable card area */}
         <div
           ref={cardRef}
-          className="rounded-2xl border border-border/50 bg-card/70 backdrop-blur-sm overflow-hidden"
+          className="rounded-2xl border border-border/25 bg-card overflow-hidden"
         >
           {/* Header bar */}
-          <div className="flex items-center justify-between px-5 py-3.5 border-b border-border/40">
+          <div className="flex items-center justify-between px-5 py-3.5 border-b border-border/25 bg-muted/10">
             <div className="flex items-center gap-2">
               <svg viewBox="0 0 24 24" fill="none" className="w-3.5 h-3.5 text-primary">
                 <path d="M2 12h3.5l3-8 4 16 3-10 2 2H22" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
               </svg>
-              <span className="text-[11px] font-semibold text-muted-foreground/60 uppercase tracking-widest">
+              <span className="text-xs font-semibold text-muted-foreground/70 tracking-wide">
                 Result
               </span>
             </div>
@@ -118,7 +137,7 @@ export function ResultCard() {
           </div>
 
           {/* Stats grid */}
-          <div className="grid grid-cols-2 sm:grid-cols-4 divide-y sm:divide-y-0 sm:divide-x divide-border/40">
+          <div className="grid grid-cols-2 sm:grid-cols-4 divide-y sm:divide-y-0 sm:divide-x divide-border/20">
             <StatCell
               label="Download"
               value={fmtSpeed(lastResult.download)}
@@ -154,10 +173,19 @@ export function ResultCard() {
         {/* Action row */}
         <div className="flex items-center justify-center gap-2 mt-3 flex-wrap">
           <ActionBtn onClick={copyResults} icon={copied ? <Check className="w-3 h-3" /> : <Copy className="w-3 h-3" />} label={copied ? "Copied!" : "Copy"} />
-          <ActionBtn onClick={downloadImage} icon={<Download className="w-3 h-3" />} label="PNG" />
+          <ActionBtn onClick={downloadImage} icon={<Download className="w-3 h-3" />} label={downloadingPNG ? "Saving..." : "PNG"} />
           <ActionBtn onClick={downloadJSON} icon={<Download className="w-3 h-3" />} label="JSON" />
           <ActionBtn onClick={shareResults} icon={<Share2 className="w-3 h-3" />} label="Share" />
         </div>
+
+        {/* Offscreen Download Card Target */}
+        {showOffscreen && (
+          <div className="absolute left-[-9999px] top-[-9999px] pointer-events-none">
+            <div className="w-[500px] h-[500px] overflow-hidden">
+              <SpeedCardView result={lastResult} cardId="resultcard-offscreen-download" />
+            </div>
+          </div>
+        )}
       </motion.div>
     </AnimatePresence>
   );
@@ -177,7 +205,7 @@ function StatCell({
     <div className="flex flex-col gap-2 p-5">
       <div className="flex items-center gap-1.5">
         <span className="text-sm font-light" style={{ color, opacity: 0.7 }}>{icon}</span>
-        <span className="text-[11px] font-semibold uppercase tracking-widest text-muted-foreground/50">
+        <span className="text-[11px] font-semibold tracking-wide text-muted-foreground/50">
           {label}
         </span>
       </div>

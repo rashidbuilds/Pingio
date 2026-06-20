@@ -2,6 +2,20 @@
 
 @custom-variant dark (&:is(.dark *));
 
+@theme {
+  --color-background: hsl(var(--background));
+  --color-foreground: hsl(var(--foreground));
+  --color-card: hsl(var(--card));
+  --color-card-foreground: hsl(var(--card-foreground));
+  --color-border: hsl(var(--border));
+  --color-muted: hsl(var(--muted));
+  --color-muted-foreground: hsl(var(--muted-foreground));
+  --color-primary: hsl(var(--primary));
+  --color-primary-foreground: hsl(var(--primary-foreground));
+  --color-secondary: hsl(var(--secondary));
+  --color-secondary-foreground: hsl(var(--secondary-foreground));
+}
+
 /* ============================================
    DESIGN TOKENS — Premium neutral palette
    Dark: deep slate, not pure black
@@ -10,8 +24,8 @@
    ============================================ */
 
 :root {
-  /* Warm off-white background */
-  --background: 220 14% 97%;
+  /* Refined light background with slightly more contrast */
+  --background: 220 12% 95%;
   --foreground: 222 47% 8%;
 
   --card: 0 0% 100%;
@@ -44,14 +58,14 @@
 }
 
 .dark {
-  /* Deep slate, not pure black */
-  --background: 222 20% 9%;
+  /* Deep dark navy/slate, not pure black */
+  --background: 222 25% 6%;
   --foreground: 210 20% 94%;
 
-  --card: 222 20% 11%;
+  --card: 222 15% 15%;
   --card-foreground: 210 20% 94%;
 
-  --popover: 222 20% 11%;
+  --popover: 222 15% 15%;
   --popover-foreground: 210 20% 94%;
 
   /* Accent: softer indigo in dark */
@@ -99,6 +113,11 @@ body {
   -moz-osx-font-smoothing: grayscale;
   font-synthesis: none;
   text-rendering: optimizeLegibility;
+}
+
+/* Explicit Card background override to bypass any compilation/caching bugs */
+.bg-card {
+  background-color: hsl(var(--card)) !important;
 }
 
 /* ============================================

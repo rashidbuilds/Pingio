@@ -1,11 +1,28 @@
 "use client";
 
+import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { Monitor, Wifi, Globe, Cpu } from "lucide-react";
 import { useDeviceInfo } from "@/hooks/useDeviceInfo";
 
 export function NetworkInsights() {
   const { deviceInfo, networkInfo } = useDeviceInfo();
+  const [ip, setIp] = useState<string>("Loading...");
+
+  useEffect(() => {
+    let active = true;
+    fetch("https://api.ipify.org?format=json")
+      .then((res) => res.json())
+      .then((data) => {
+        if (active) setIp(data.ip);
+      })
+      .catch(() => {
+        if (active) setIp("Unknown");
+      });
+    return () => {
+      active = false;
+    };
+  }, []);
 
   const insights = [
     {
@@ -59,13 +76,13 @@ export function NetworkInsights() {
       transition={{ delay: 0.2 }}
       className="w-full max-w-5xl mx-auto"
     >
-      <div className="rounded-xl border border-border/40 bg-card/20 overflow-hidden">
-        <div className="px-4 py-3 border-b border-border/40">
-          <span className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">
+      <div className="rounded-xl border border-border/25 bg-card overflow-hidden">
+        <div className="px-4 py-3 border-b border-border/25 bg-muted/10">
+          <span className="text-xs font-semibold text-muted-foreground tracking-wide">
             Connection Insights
           </span>
         </div>
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-0 divide-y sm:divide-y-0 sm:divide-x divide-border/30">
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-0 divide-y sm:divide-y-0 sm:divide-x divide-border/20">
           {insights.slice(0, 4).map((item, i) => (
             <motion.div
               key={item.label}
@@ -74,26 +91,32 @@ export function NetworkInsights() {
               transition={{ delay: 0.1 + i * 0.05 }}
               className="flex flex-col gap-1.5 p-4"
             >
-              <div className="flex items-center gap-1.5 text-muted-foreground/50">
+              <div className="flex items-center gap-1.5 text-muted-foreground/60">
                 {item.icon}
                 <span className="text-xs font-medium">{item.label}</span>
               </div>
-              <span className="text-sm font-medium text-foreground/80">
+              <span className="text-sm font-medium text-foreground/90">
                 {item.value}
               </span>
             </motion.div>
           ))}
         </div>
-        {insights.length > 4 && (
-          <div className="px-4 pb-3 flex gap-4">
+
+        {/* Bottom bar with additional insights and Current IP */}
+        <div className="px-4 py-2.5 bg-muted/20 border-t border-border/25 flex items-center justify-between text-xs text-muted-foreground">
+          <div className="flex gap-4">
             {insights.slice(4).map((item) => (
-              <div key={item.label} className="flex items-center gap-2">
-                <span className="text-xs text-muted-foreground/50">{item.label}:</span>
-                <span className="text-xs font-medium text-foreground/70">{item.value}</span>
+              <div key={item.label} className="flex items-center gap-1">
+                <span className="text-muted-foreground/60">{item.label}:</span>
+                <span className="font-medium text-foreground/80">{item.value}</span>
               </div>
             ))}
           </div>
-        )}
+          <div className="flex items-center gap-1">
+            <span className="text-muted-foreground/60">IP:</span>
+            <span className="font-mono font-medium text-foreground/85">{ip}</span>
+          </div>
+        </div>
       </div>
     </motion.div>
   );

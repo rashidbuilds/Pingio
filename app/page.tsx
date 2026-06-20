@@ -1,8 +1,9 @@
 "use client";
 
-import { useEffect, useRef, useCallback } from "react";
+import { useEffect, useRef, useCallback, useState } from "react";
 import { motion } from "framer-motion";
 import { useTestStore } from "@/store/testStore";
+import { useDeviceInfo } from "@/hooks/useDeviceInfo";
 import { SpeedTestEngine } from "@/lib/speedtest";
 import { saveResult, getAllResults } from "@/lib/db";
 import { TestResult } from "@/types";
@@ -26,6 +27,22 @@ export default function Home() {
     setHistory,
     phase,
   } = useTestStore();
+
+  const { deviceInfo, networkInfo } = useDeviceInfo();
+  const [ip, setIp] = useState<string>("Unknown");
+
+  useEffect(() => {
+    let active = true;
+    fetch("https://api.ipify.org?format=json")
+      .then((res) => res.json())
+      .then((data) => {
+        if (active) setIp(data.ip);
+      })
+      .catch(() => { });
+    return () => {
+      active = false;
+    };
+  }, []);
 
   const engineRef = useRef<SpeedTestEngine | null>(null);
 
@@ -55,6 +72,16 @@ export default function Home() {
         updateUpload(speed, samples, progress);
       },
       onComplete: async ({ ping, jitter, download, upload, downloadPeak, uploadPeak }) => {
+        const formattedBrowser = deviceInfo.browserVersion
+          ? `${deviceInfo.browser} ${deviceInfo.browserVersion.split(".")[0]}`
+          : deviceInfo.browser;
+
+        const formattedConnection = networkInfo.effectiveType
+          ? networkInfo.effectiveType.toUpperCase()
+          : deviceInfo.connectionType !== "Unknown"
+            ? deviceInfo.connectionType
+            : "—";
+
         const result: TestResult = {
           id: crypto.randomUUID(),
           timestamp: Date.now(),
@@ -64,6 +91,11 @@ export default function Home() {
           jitter,
           downloadPeak,
           uploadPeak,
+          ip: ip !== "Loading..." ? ip : "Unknown",
+          device: deviceInfo.deviceType,
+          browser: formattedBrowser,
+          os: deviceInfo.os,
+          connection: formattedConnection,
         };
         completeTest(result);
         await saveResult(result).catch(console.error);
@@ -73,7 +105,7 @@ export default function Home() {
         resetTest();
       },
     });
-  }, [phase, resetTest, startTest, updatePing, updateDownload, updateUpload, completeTest]);
+  }, [phase, resetTest, startTest, updatePing, updateDownload, updateUpload, completeTest, ip, deviceInfo, networkInfo]);
 
   const stopTest = useCallback(() => {
     engineRef.current?.abort();
@@ -90,7 +122,7 @@ export default function Home() {
             initial={{ opacity: 0, y: 8 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.1 }}
-            className="text-3xl text-center font-semibold text-muted-foreground"
+            className="text-3xl sm:text-4xl text-center font-semibold text-foreground"
           >
             Measure your network performance instantly
           </motion.h1>
